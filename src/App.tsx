@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
 
@@ -18,13 +18,6 @@ type ProjectItem = {
   stack: string
   description: string
   impact: string
-}
-
-type TimelineStep = {
-  id: string
-  label: string
-  title: string
-  text: string
 }
 
 const profile = {
@@ -136,33 +129,6 @@ const navItems = [
   { href: '#contact', label: 'Contact' },
 ]
 
-const processSteps: TimelineStep[] = [
-  {
-    id: 'discover',
-    label: '01',
-    title: 'Understand the product properly',
-    text: 'I like turning vague asks into a clear implementation path, with realistic tradeoffs and clean user outcomes.',
-  },
-  {
-    id: 'design',
-    label: '02',
-    title: 'Shape the interface around clarity',
-    text: 'Strong visual hierarchy, intuitive flows, and polished details usually save more time than clever complexity.',
-  },
-  {
-    id: 'build',
-    label: '03',
-    title: 'Build it with maintainable structure',
-    text: 'Reusable components, predictable state, and disciplined Git habits make the product easier to evolve later.',
-  },
-  {
-    id: 'iterate',
-    label: '04',
-    title: 'Refine through review and testing',
-    text: 'The last layer is where a product starts to feel trustworthy, responsive, and genuinely nice to use.',
-  },
-]
-
 const sectionLabelClass = 'mb-3 inline-block text-xs font-semibold uppercase tracking-[0.22em] text-violet-300'
 const cardClass = 'rounded-3xl border border-white/10 bg-white/[0.035] shadow-[0_20px_60px_rgba(0,0,0,0.24)]'
 const revealBaseClass = 'transition duration-700 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none'
@@ -171,6 +137,7 @@ function App() {
   const [scrollY, setScrollY] = useState(0)
   const [activeSection, setActiveSection] = useState('#about')
   const [revealed, setRevealed] = useState<Record<string, boolean>>({ hero: true })
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -234,20 +201,10 @@ function App() {
   const heroGlowOpacity = Math.max(0.18, 1 - scrollY / 700)
   const navScrolled = scrollY > 20
   const progress = Math.min(scrollY / 2200, 1)
-  const processProgress = Math.min(Math.max((scrollY - 1100) / 900, 0), 1)
   const showBackToTop = scrollY > 800
 
   const revealClass = (key: string) =>
     `${revealBaseClass} ${revealed[key] ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`
-
-  const processStepStates = useMemo(
-    () =>
-      processSteps.map((step, index) => ({
-        ...step,
-        active: processProgress >= index / processSteps.length,
-      })),
-    [processProgress],
-  )
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(116,55,255,0.18),transparent_32%),linear-gradient(180deg,#0a0a0f_0%,#0d0d14_42%,#09090d_100%)] text-slate-100">
@@ -256,37 +213,76 @@ function App() {
       </div>
 
       <header
-        className={`sticky top-0 z-20 flex flex-col gap-4 border-b px-4 py-4 backdrop-blur-xl transition-all duration-300 md:flex-row md:items-center md:justify-between md:px-8 ${
+        className={`sticky top-0 z-20 border-b px-4 py-4 backdrop-blur-xl transition-all duration-300 md:px-8 ${
           navScrolled
             ? 'border-white/10 bg-[rgba(10,10,15,0.82)] shadow-[0_10px_40px_rgba(0,0,0,0.18)]'
             : 'border-white/5 bg-[rgba(10,10,15,0.58)]'
         }`}
       >
-        <a className="text-sm uppercase tracking-[0.18em] text-white" href="#top">
-          Martin Nagy
-        </a>
-        <nav aria-label="Primary navigation" className="flex flex-wrap items-center justify-center gap-5 text-sm text-slate-300">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.href
-            return (
-              <a
-                key={item.href}
-                className={`rounded-full px-3 py-2 transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 ${
-                  isActive ? 'bg-white/8 text-white' : 'hover:text-white'
-                }`}
-                href={item.href}
-              >
-                {item.label}
-              </a>
-            )
-          })}
-        </nav>
-        <a
-          className="inline-flex min-h-12 items-center justify-center rounded-full border border-violet-300/35 bg-violet-400/10 px-4 py-3 text-sm text-slate-100 transition hover:bg-violet-400/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400"
-          href={`mailto:${contact.email}`}
-        >
-          Let&apos;s talk
-        </a>
+        <div className="flex items-center justify-between gap-4">
+          <a className="text-sm uppercase tracking-[0.18em] text-white" href="#top">
+            Martin Nagy
+          </a>
+
+          <button
+            type="button"
+            aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white md:hidden"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+          >
+            <span className="text-lg leading-none">{mobileMenuOpen ? '×' : '☰'}</span>
+          </button>
+
+          <nav aria-label="Primary navigation" className="hidden items-center justify-center gap-5 text-sm text-slate-300 md:flex">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.href
+              return (
+                <a
+                  key={item.href}
+                  className={`rounded-full px-3 py-2 transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 ${
+                    isActive ? 'bg-white/8 text-white' : 'hover:text-white'
+                  }`}
+                  href={item.href}
+                >
+                  {item.label}
+                </a>
+              )
+            })}
+          </nav>
+
+          <a
+            className="hidden min-h-12 items-center justify-center rounded-full border border-violet-300/35 bg-violet-400/10 px-4 py-3 text-sm text-slate-100 transition hover:bg-violet-400/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 md:inline-flex"
+            href={`mailto:${contact.email}`}
+          >
+            Let&apos;s talk
+          </a>
+        </div>
+
+        {mobileMenuOpen && (
+          <div className="mt-4 grid gap-3 rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:hidden">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.href
+              return (
+                <a
+                  key={item.href}
+                  className={`rounded-2xl px-4 py-3 text-sm transition ${isActive ? 'bg-white/8 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              )
+            })}
+            <a
+              className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-violet-300/35 bg-violet-400/10 px-4 py-3 text-sm text-slate-100 transition hover:bg-violet-400/20"
+              href={`mailto:${contact.email}`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Let&apos;s talk
+            </a>
+          </div>
+        )}
       </header>
 
       <main id="top">
@@ -440,52 +436,8 @@ function App() {
           </div>
         </section>
 
-        <section id="process" className="scroll-mt-28">
-          <div className={`mx-auto w-[min(1120px,calc(100%-1rem))] py-16 md:w-[min(1120px,calc(100%-2rem))] ${revealClass('process')}`}>
-            <div className="mb-6">
-              <p className={sectionLabelClass}>Process</p>
-              <h2 className="text-4xl font-semibold text-white">How I usually move work forward</h2>
-            </div>
-
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
-              <div className="pointer-events-none absolute left-7 top-8 hidden h-[calc(100%-4rem)] w-px bg-white/10 md:block" />
-              <div
-                className="pointer-events-none absolute left-7 top-8 hidden w-px origin-top bg-gradient-to-b from-violet-400 via-fuchsia-400 to-cyan-300 transition-transform duration-300 md:block"
-                style={{ height: 'calc(100% - 4rem)', transform: `scaleY(${processProgress})` }}
-              />
-              <div className="grid gap-5">
-                {processStepStates.map((step, index) => (
-                  <article
-                    key={step.id}
-                    className={`grid gap-4 rounded-2xl border p-5 transition duration-500 md:grid-cols-[auto_1fr] ${
-                      step.active ? 'border-violet-300/30 bg-white/[0.05]' : 'border-white/8 bg-white/[0.02]'
-                    }`}
-                    style={{ transitionDelay: `${index * 80}ms` }}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-full border text-sm font-semibold ${
-                          step.active
-                            ? 'border-violet-300/40 bg-violet-400/15 text-violet-100'
-                            : 'border-white/10 bg-white/[0.04] text-slate-300'
-                        }`}
-                      >
-                        {step.label}
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-white">{step.title}</h3>
-                      <p className="mt-2 text-slate-300">{step.text}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section className="scroll-mt-28">
-          <div className={`mx-auto grid w-[min(1120px,calc(100%-1rem))] gap-8 py-14 md:w-[min(1120px,calc(100%-2rem))] lg:grid-cols-[0.9fr_1.1fr] ${revealClass('skills')}`}>
+          <div className={`mx-auto grid w-[min(1120px,calc(100%-1rem))] gap-8 py-12 md:w-[min(1120px,calc(100%-2rem))] lg:grid-cols-[0.9fr_1.1fr] ${revealClass('skills')}`}>
             <div>
               <p className={sectionLabelClass}>Skills</p>
               <h2 className="text-4xl font-semibold text-white">What I work with</h2>
@@ -512,7 +464,7 @@ function App() {
         </section>
 
         <section className="scroll-mt-28">
-          <div className={`mx-auto grid w-[min(1120px,calc(100%-1rem))] gap-8 py-14 md:w-[min(1120px,calc(100%-2rem))] lg:grid-cols-[0.9fr_1.1fr] ${revealClass('education')}`}>
+          <div className={`mx-auto grid w-[min(1120px,calc(100%-1rem))] gap-8 py-10 md:w-[min(1120px,calc(100%-2rem))] lg:grid-cols-[0.9fr_1.1fr] ${revealClass('education')}`}>
             <div>
               <p className={sectionLabelClass}>Education & Languages</p>
               <h2 className="text-4xl font-semibold text-white">Foundation</h2>
@@ -538,7 +490,7 @@ function App() {
         </section>
 
         <section id="contact" className="scroll-mt-28">
-          <div className={`${cardClass} ${revealClass('contact')} mx-auto mb-16 w-[min(1120px,calc(100%-1rem))] p-6 md:w-[min(1120px,calc(100%-2rem))] md:p-8`}>
+          <div className={`${cardClass} ${revealClass('contact')} mx-auto mb-10 w-[min(1120px,calc(100%-1rem))] p-6 pb-8 md:w-[min(1120px,calc(100%-2rem))] md:p-8 md:pb-10`}>
             <p className={sectionLabelClass}>Contact</p>
             <h2 className="mt-3 text-4xl font-semibold text-white">Let&apos;s build something solid and thoughtful.</h2>
             <p className="mt-3 max-w-4xl text-slate-300">

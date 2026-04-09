@@ -92,7 +92,7 @@ export function HeroScene({ scrollY }: HeroSceneProps) {
             top: ring.top,
             left: ring.left,
             borderColor: ring.border,
-            transform: `translate3d(0, ${normalizedScroll * ring.factorY * 180}px, 0) rotate(${normalizedScroll * ring.rotate * 360}deg)`,
+            transform: `translate3d(0, ${normalizedScroll * ring.factorY * 320}px, 0) rotate(${normalizedScroll * ring.rotate * 720}deg)`,
           }}
         />
       ))}
@@ -108,7 +108,7 @@ export function HeroScene({ scrollY }: HeroSceneProps) {
             left: orb.left,
             background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), ${orb.color} 38%, rgba(0,0,0,0) 74%)`,
             filter: `blur(${orb.blur}px)`,
-            transform: `translate3d(${orb.baseX + normalizedScroll * orb.factorX * 280}px, ${orb.baseY + normalizedScroll * orb.factorY * 260}px, 0) rotate(${normalizedScroll * orb.rotate * 360}deg) scale(${1 + normalizedScroll * 0.08})`,
+            transform: `translate3d(${orb.baseX + normalizedScroll * orb.factorX * 520}px, ${orb.baseY + normalizedScroll * orb.factorY * 420}px, 0) rotate(${normalizedScroll * orb.rotate * 720}deg) scale(${1 + normalizedScroll * 0.14})`,
           }}
         />
       ))}
@@ -124,18 +124,18 @@ export function HeroScene({ scrollY }: HeroSceneProps) {
             left: particle.left,
             background: particle.color,
             boxShadow: `0 0 22px ${particle.color}`,
-            transform: `translate3d(${normalizedScroll * particle.factorX * 220}px, ${normalizedScroll * particle.factorY * -260}px, 0)`,
+            transform: `translate3d(${normalizedScroll * particle.factorX * 420}px, ${normalizedScroll * particle.factorY * -460}px, 0)`,
           }}
         />
       ))}
 
       <div
         className="absolute left-[14%] top-[18%] h-40 w-40 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm"
-        style={{ transform: `translate3d(${normalizedScroll * 22}px, ${normalizedScroll * -30}px, 0) rotate(${normalizedScroll * 18}deg)` }}
+        style={{ transform: `translate3d(${normalizedScroll * 46}px, ${normalizedScroll * -72}px, 0) rotate(${normalizedScroll * 32}deg)` }}
       />
       <div
         className="absolute bottom-[18%] right-[12%] h-28 w-28 rounded-[1.75rem] border border-white/10 bg-white/[0.06] backdrop-blur-sm"
-        style={{ transform: `translate3d(${normalizedScroll * -26}px, ${normalizedScroll * 20}px, 0) rotate(${normalizedScroll * -24}deg)` }}
+        style={{ transform: `translate3d(${normalizedScroll * -58}px, ${normalizedScroll * 44}px, 0) rotate(${normalizedScroll * -38}deg)` }}
       />
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#09090d] via-[#09090d]/70 to-transparent" />
