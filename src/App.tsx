@@ -1,8 +1,12 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import Lenis from 'lenis'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import 'lenis/dist/lenis.css'
 
 const HeroScene = lazy(() => import('./components/HeroScene').then((module) => ({ default: module.HeroScene })))
+
+gsap.registerPlugin(ScrollTrigger)
 
 type ExperienceItem = {
   role: string
@@ -139,6 +143,14 @@ function App() {
   const [revealed, setRevealed] = useState<Record<string, boolean>>({ hero: true })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  const appRef = useRef<HTMLDivElement | null>(null)
+  const heroSectionRef = useRef<HTMLElement | null>(null)
+  const heroTextRef = useRef<HTMLDivElement | null>(null)
+  const heroVisualRef = useRef<HTMLDivElement | null>(null)
+  const heroStatsRef = useRef<HTMLDivElement | null>(null)
+  const projectsSectionRef = useRef<HTMLElement | null>(null)
+  const projectCardsRef = useRef<Array<HTMLElement | null>>([])
+
   useEffect(() => {
     const lenis = new Lenis({
       autoRaf: true,
@@ -152,6 +164,7 @@ function App() {
 
     const handleScroll = ({ scroll }: { scroll: number }) => {
       setScrollY(scroll)
+      ScrollTrigger.update()
     }
 
     lenis.on('scroll', handleScroll)
@@ -197,17 +210,156 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
-  const heroOffset = Math.min(scrollY * 0.12, 48)
-  const heroGlowOpacity = Math.max(0.18, 1 - scrollY / 700)
+  useEffect(() => {
+    if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return
+    }
+
+    const ctx = gsap.context(() => {
+      if (heroTextRef.current && heroVisualRef.current) {
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: heroSectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1.2,
+          },
+        })
+          .to(heroTextRef.current, { yPercent: -18, opacity: 0.45, ease: 'none' }, 0)
+          .to(heroVisualRef.current, { yPercent: -8, rotation: 4, scale: 1.05, ease: 'none' }, 0)
+      }
+
+      if (heroStatsRef.current) {
+        gsap.fromTo(
+          heroStatsRef.current.children,
+          { y: 48, opacity: 0, scale: 0.96 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            stagger: 0.12,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: heroStatsRef.current,
+              start: 'top 82%',
+            },
+          },
+        )
+      }
+
+      projectCardsRef.current.forEach((card, index) => {
+        if (!card) return
+
+        gsap.fromTo(
+          card,
+          {
+            y: 120,
+            opacity: 0,
+            rotateX: -14,
+            scale: 0.94,
+            transformPerspective: 1200,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            rotateX: 0,
+            scale: 1,
+            duration: 1.15,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: projectsSectionRef.current,
+              start: 'top 72%',
+            },
+            delay: index * 0.08,
+          },
+        )
+      })
+
+      if (projectsSectionRef.current) {
+        const cards = projectCardsRef.current.filter(Boolean)
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: projectsSectionRef.current,
+            start: 'top top+=80',
+            end: '+=500',
+            scrub: 1,
+            pin: window.innerWidth >= 1024,
+          },
+        })
+          .to(projectsSectionRef.current.querySelector('[data-projects-heading]'), {
+            y: -36,
+            opacity: 0.4,
+            ease: 'none',
+          }, 0)
+          .to(cards, {
+            y: (_, target) => (target === cards[0] ? -20 : 24),
+            rotate: (_, target) => (target === cards[0] ? -2.5 : 2.5),
+            scale: (_, target) => (target === cards[0] ? 1.02 : 0.98),
+            ease: 'none',
+            stagger: 0.08,
+          }, 0)
+      }
+
+      gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((element) => {
+        const depth = Number(element.dataset.depth ?? 0.16)
+        gsap.to(element, {
+          yPercent: -depth * 100,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: element,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.1,
+          },
+        })
+      })
+    }, appRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  const heroOffset = Math.min(scrollY * 0.08, 36)
+  const heroGlowOpacity = Math.max(0.2, 1 - scrollY / 640)
   const navScrolled = scrollY > 20
   const progress = Math.min(scrollY / 2200, 1)
   const showBackToTop = scrollY > 800
+  const heroAtmosphere = Math.min(scrollY / 900, 1)
 
   const revealClass = (key: string) =>
     `${revealBaseClass} ${revealed[key] ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`
 
+  const heroSceneDepth = useMemo(
+    () => ({
+      glowScale: 1 + heroAtmosphere * 0.18,
+      glowBlur: 32 + heroAtmosphere * 28,
+    }),
+    [heroAtmosphere],
+  )
+
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(116,55,255,0.18),transparent_32%),linear-gradient(180deg,#0a0a0f_0%,#0d0d14_42%,#09090d_100%)] text-slate-100">
+    <div
+      ref={appRef}
+      className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(116,55,255,0.18),transparent_32%),linear-gradient(180deg,#05060b_0%,#0d0d14_42%,#08080d_100%)] text-slate-100"
+    >
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div
+          className="absolute left-[-12%] top-[-8%] h-[28rem] w-[28rem] rounded-full bg-violet-500/18 blur-[120px]"
+          data-parallax
+          data-depth="0.18"
+        />
+        <div
+          className="absolute right-[-10%] top-[18%] h-[26rem] w-[26rem] rounded-full bg-cyan-400/12 blur-[120px]"
+          data-parallax
+          data-depth="0.24"
+        />
+        <div
+          className="absolute bottom-[-14%] left-[24%] h-[24rem] w-[24rem] rounded-full bg-fuchsia-500/10 blur-[140px]"
+          data-parallax
+          data-depth="0.14"
+        />
+      </div>
+
       <div className="fixed left-0 right-0 top-0 z-30 h-[2px] bg-white/5">
         <div className="h-full bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-300 transition-[width] duration-200" style={{ width: `${progress * 100}%` }} />
       </div>
@@ -286,11 +438,11 @@ function App() {
       </header>
 
       <main id="top">
-        <section id="hero" className="scroll-mt-24">
+        <section id="hero" ref={heroSectionRef} className="scroll-mt-24">
           <div className="mx-auto w-[min(1120px,calc(100%-1rem))] px-0 pb-20 pt-24 md:w-[min(1120px,calc(100%-2rem))] md:pt-28">
             <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-              <div className={revealClass('hero')} style={{ transform: `translateY(${heroOffset}px)` }}>
-                <div className="flex flex-col items-start">
+              <div ref={heroTextRef} className={revealClass('hero')} style={{ transform: `translateY(${heroOffset}px)` }}>
+                <div className="flex flex-col items-start" data-parallax data-depth="0.1">
                   <div className={sectionLabelClass}>{profile.title}</div>
                   <h1 className="mt-4 max-w-[12ch] text-5xl font-semibold leading-none text-white sm:text-6xl md:text-7xl">
                     Building refined web experiences with practical engineering underneath.
@@ -318,11 +470,16 @@ function App() {
                 </div>
               </div>
 
-              <div className={`${revealClass('hero')} relative`}>
+              <div ref={heroVisualRef} className={`${revealClass('hero')} relative`}>
                 <div
-                  className="pointer-events-none absolute inset-x-[8%] top-[6%] z-0 h-44 rounded-full bg-violet-400/15 blur-3xl transition-opacity duration-300"
-                  style={{ opacity: heroGlowOpacity }}
+                  className="pointer-events-none absolute inset-x-[6%] top-[0%] z-0 h-52 rounded-full bg-violet-400/15 transition-all duration-300"
+                  style={{
+                    opacity: heroGlowOpacity,
+                    filter: `blur(${heroSceneDepth.glowBlur}px)`,
+                    transform: `scale(${heroSceneDepth.glowScale})`,
+                  }}
                 />
+                <div className="absolute inset-x-[18%] top-[16%] z-0 h-32 rounded-full bg-cyan-400/12 blur-3xl" data-parallax data-depth="0.22" />
                 <div className="relative z-10">
                   <Suspense
                     fallback={
@@ -332,7 +489,13 @@ function App() {
                     <HeroScene scrollY={scrollY} />
                   </Suspense>
                 </div>
-                <aside className={`${cardClass} relative z-20 -mt-16 mx-4 p-6 backdrop-blur-md md:mx-8`} aria-label="Professional snapshot">
+                <aside
+                  className={`${cardClass} relative z-20 -mt-16 mx-4 overflow-hidden p-6 backdrop-blur-md md:mx-8`}
+                  aria-label="Professional snapshot"
+                  data-parallax
+                  data-depth="0.08"
+                >
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-300/60 to-transparent" />
                   <p className={sectionLabelClass}>Snapshot</p>
                   <h2 className="text-3xl font-semibold text-white">{profile.name}</h2>
                   <p className="mt-4 text-slate-300">{profile.summary}</p>
@@ -345,13 +508,9 @@ function App() {
               </div>
             </div>
 
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
-              {profile.stats.map((item, index) => (
-                <div
-                  key={item.label}
-                  className={`${cardClass} ${revealClass('hero')} rounded-2xl p-5 transition hover:-translate-y-0.5`}
-                  style={{ transitionDelay: `${index * 80}ms` }}
-                >
+            <div ref={heroStatsRef} className="mt-8 grid gap-4 md:grid-cols-3">
+              {profile.stats.map((item) => (
+                <div key={item.label} className={`${cardClass} ${revealClass('hero')} rounded-2xl p-5 transition hover:-translate-y-0.5`}>
                   <strong className="block text-xl text-white">{item.value}</strong>
                   <span className="mt-1 block text-slate-400">{item.label}</span>
                 </div>
@@ -362,11 +521,11 @@ function App() {
 
         <section id="about" className="scroll-mt-28">
           <div className={`mx-auto grid w-[min(1120px,calc(100%-1rem))] gap-8 py-16 md:w-[min(1120px,calc(100%-2rem))] lg:grid-cols-[0.9fr_1.1fr] ${revealClass('about')}`}>
-            <div>
+            <div data-parallax data-depth="0.08">
               <p className={sectionLabelClass}>About</p>
               <h2 className="text-4xl font-semibold text-white">{profile.name}</h2>
             </div>
-            <div className="grid gap-5 text-slate-300">
+            <div className="grid gap-5 text-slate-300" data-parallax data-depth="0.12">
               <p>{profile.summary}</p>
               <p>
                 I enjoy translating complex product requirements into clean user-facing experiences, with a strong focus on maintainability, clarity, and dependable delivery.
@@ -377,7 +536,7 @@ function App() {
 
         <section id="experience" className="scroll-mt-28">
           <div className="mx-auto w-[min(1120px,calc(100%-1rem))] py-16 md:w-[min(1120px,calc(100%-2rem))]">
-            <div className={`mb-6 ${revealClass('experience')}`}>
+            <div className={`mb-6 ${revealClass('experience')}`} data-parallax data-depth="0.06">
               <p className={sectionLabelClass}>Experience</p>
               <h2 className="text-4xl font-semibold text-white">Selected roles</h2>
             </div>
@@ -387,6 +546,8 @@ function App() {
                   key={`${item.company}-${item.period}`}
                   className={`${cardClass} ${revealClass('experience')} p-6 transition hover:-translate-y-0.5`}
                   style={{ transitionDelay: `${index * 90}ms` }}
+                  data-parallax
+                  data-depth={index % 2 === 0 ? '0.08' : '0.12'}
                 >
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div>
@@ -410,19 +571,25 @@ function App() {
           </div>
         </section>
 
-        <section id="projects" className="scroll-mt-28">
+        <section id="projects" ref={projectsSectionRef} className="scroll-mt-28">
           <div className="mx-auto w-[min(1120px,calc(100%-1rem))] py-16 md:w-[min(1120px,calc(100%-2rem))]">
-            <div className={`mb-6 ${revealClass('projects')}`}>
+            <div className={`mb-6 ${revealClass('projects')}`} data-projects-heading>
               <p className={sectionLabelClass}>Projects</p>
               <h2 className="text-4xl font-semibold text-white">Work beyond the day job</h2>
+              <p className="mt-4 max-w-2xl text-slate-300">
+                A short cinematic pause helps the projects land with more presence, depth, and focus.
+              </p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {projects.map((project, index) => (
                 <article
                   key={project.name}
-                  className={`${cardClass} ${revealClass('projects')} min-h-[240px] p-6 transition hover:-translate-y-0.5`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
+                  ref={(element) => {
+                    projectCardsRef.current[index] = element
+                  }}
+                  className={`${cardClass} ${revealClass('projects')} min-h-[260px] overflow-hidden p-6 transition hover:-translate-y-0.5`}
                 >
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-300/50 to-transparent" />
                   <span className={sectionLabelClass}>{project.stack}</span>
                   <h3 className="text-2xl font-semibold text-white">{project.name}</h3>
                   <p className="mt-4 text-slate-300">{project.description}</p>
@@ -438,24 +605,24 @@ function App() {
 
         <section className="scroll-mt-28">
           <div className={`mx-auto grid w-[min(1120px,calc(100%-1rem))] gap-8 py-12 md:w-[min(1120px,calc(100%-2rem))] lg:grid-cols-[0.9fr_1.1fr] ${revealClass('skills')}`}>
-            <div>
+            <div data-parallax data-depth="0.06">
               <p className={sectionLabelClass}>Skills</p>
               <h2 className="text-4xl font-semibold text-white">What I work with</h2>
             </div>
             <div className="grid gap-5 md:grid-cols-2">
-              <div>
+              <div className={cardClass + ' p-5'}>
                 <h3 className="text-xl font-semibold text-white">Frontend</h3>
                 <p className="text-slate-300">{skills.frontend.join(' • ')}</p>
               </div>
-              <div>
+              <div className={cardClass + ' p-5'}>
                 <h3 className="text-xl font-semibold text-white">Backend</h3>
                 <p className="text-slate-300">{skills.backend.join(' • ')}</p>
               </div>
-              <div>
+              <div className={cardClass + ' p-5'}>
                 <h3 className="text-xl font-semibold text-white">Tools</h3>
                 <p className="text-slate-300">{skills.tools.join(' • ')}</p>
               </div>
-              <div>
+              <div className={cardClass + ' p-5'}>
                 <h3 className="text-xl font-semibold text-white">Workflow</h3>
                 <p className="text-slate-300">{skills.workflow.join(' • ')}</p>
               </div>
@@ -465,11 +632,11 @@ function App() {
 
         <section className="scroll-mt-28">
           <div className={`mx-auto grid w-[min(1120px,calc(100%-1rem))] gap-8 py-10 md:w-[min(1120px,calc(100%-2rem))] lg:grid-cols-[0.9fr_1.1fr] ${revealClass('education')}`}>
-            <div>
+            <div data-parallax data-depth="0.05">
               <p className={sectionLabelClass}>Education & Languages</p>
               <h2 className="text-4xl font-semibold text-white">Foundation</h2>
             </div>
-            <div className="grid gap-5 text-slate-300">
+            <div className="grid gap-5 text-slate-300" data-parallax data-depth="0.1">
               <div>
                 <h3 className="text-xl font-semibold text-white">{education.degree}</h3>
                 <p>{education.school}</p>
@@ -490,7 +657,8 @@ function App() {
         </section>
 
         <section id="contact" className="scroll-mt-28">
-          <div className={`${cardClass} ${revealClass('contact')} mx-auto mb-10 w-[min(1120px,calc(100%-1rem))] p-6 pb-8 md:w-[min(1120px,calc(100%-2rem))] md:p-8 md:pb-10`}>
+          <div className={`${cardClass} ${revealClass('contact')} mx-auto mb-10 w-[min(1120px,calc(100%-1rem))] overflow-hidden p-6 pb-8 md:w-[min(1120px,calc(100%-2rem))] md:p-8 md:pb-10`}>
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/50 to-transparent" />
             <p className={sectionLabelClass}>Contact</p>
             <h2 className="mt-3 text-4xl font-semibold text-white">Let&apos;s build something solid and thoughtful.</h2>
             <p className="mt-3 max-w-4xl text-slate-300">
@@ -498,13 +666,13 @@ function App() {
             </p>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <a
-                className="flex min-h-14 items-center rounded-full border border-white/10 bg-white/5 px-4 py-3 text-slate-200"
+                className="flex min-h-14 items-center rounded-full border border-white/10 bg-white/5 px-4 py-3 text-slate-200 transition hover:border-violet-300/35 hover:bg-white/8"
                 href={`mailto:${contact.email}`}
               >
                 {contact.email}
               </a>
               <a
-                className="flex min-h-14 items-center rounded-full border border-white/10 bg-white/5 px-4 py-3 text-slate-200"
+                className="flex min-h-14 items-center rounded-full border border-white/10 bg-white/5 px-4 py-3 text-slate-200 transition hover:border-violet-300/35 hover:bg-white/8"
                 href={`tel:${contact.phone.replace(/\s+/g, '')}`}
               >
                 {contact.phone}
