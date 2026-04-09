@@ -523,12 +523,6 @@ function App() {
               >
                 Start a conversation
               </a>
-              <a
-                className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-medium text-slate-100 transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400"
-                href="#top"
-              >
-                Back to top
-              </a>
             </div>
           </div>
         </section>
