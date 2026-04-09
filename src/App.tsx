@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
 
@@ -16,6 +16,13 @@ type ProjectItem = {
   stack: string
   description: string
   impact: string
+}
+
+type TimelineStep = {
+  id: string
+  label: string
+  title: string
+  text: string
 }
 
 const profile = {
@@ -127,6 +134,33 @@ const navItems = [
   { href: '#contact', label: 'Contact' },
 ]
 
+const processSteps: TimelineStep[] = [
+  {
+    id: 'discover',
+    label: '01',
+    title: 'Understand the product properly',
+    text: 'I like turning vague asks into a clear implementation path, with realistic tradeoffs and clean user outcomes.',
+  },
+  {
+    id: 'design',
+    label: '02',
+    title: 'Shape the interface around clarity',
+    text: 'Strong visual hierarchy, intuitive flows, and polished details usually save more time than clever complexity.',
+  },
+  {
+    id: 'build',
+    label: '03',
+    title: 'Build it with maintainable structure',
+    text: 'Reusable components, predictable state, and disciplined Git habits make the product easier to evolve later.',
+  },
+  {
+    id: 'iterate',
+    label: '04',
+    title: 'Refine through review and testing',
+    text: 'The last layer is where a product starts to feel trustworthy, responsive, and genuinely nice to use.',
+  },
+]
+
 const sectionLabelClass = 'mb-3 inline-block text-xs font-semibold uppercase tracking-[0.22em] text-violet-300'
 const cardClass = 'rounded-3xl border border-white/10 bg-white/[0.035] shadow-[0_20px_60px_rgba(0,0,0,0.24)]'
 const revealBaseClass = 'transition duration-700 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none'
@@ -144,6 +178,7 @@ function App() {
       stopInertiaOnNavigate: true,
       duration: 1.05,
       wheelMultiplier: 0.95,
+      touchMultiplier: 1,
     })
 
     const handleScroll = ({ scroll }: { scroll: number }) => {
@@ -197,9 +232,20 @@ function App() {
   const heroGlowOpacity = Math.max(0.18, 1 - scrollY / 700)
   const navScrolled = scrollY > 20
   const progress = Math.min(scrollY / 2200, 1)
+  const processProgress = Math.min(Math.max((scrollY - 1100) / 900, 0), 1)
+  const showBackToTop = scrollY > 800
 
   const revealClass = (key: string) =>
     `${revealBaseClass} ${revealed[key] ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`
+
+  const processStepStates = useMemo(
+    () =>
+      processSteps.map((step, index) => ({
+        ...step,
+        active: processProgress >= index / processSteps.length,
+      })),
+    [processProgress],
+  )
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(116,55,255,0.18),transparent_32%),linear-gradient(180deg,#0a0a0f_0%,#0d0d14_42%,#09090d_100%)] text-slate-100">
@@ -386,6 +432,50 @@ function App() {
           </div>
         </section>
 
+        <section id="process" className="scroll-mt-28">
+          <div className={`mx-auto w-[min(1120px,calc(100%-1rem))] py-16 md:w-[min(1120px,calc(100%-2rem))] ${revealClass('process')}`}>
+            <div className="mb-6">
+              <p className={sectionLabelClass}>Process</p>
+              <h2 className="text-4xl font-semibold text-white">How I usually move work forward</h2>
+            </div>
+
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <div className="pointer-events-none absolute left-7 top-8 hidden h-[calc(100%-4rem)] w-px bg-white/10 md:block" />
+              <div
+                className="pointer-events-none absolute left-7 top-8 hidden w-px origin-top bg-gradient-to-b from-violet-400 via-fuchsia-400 to-cyan-300 transition-transform duration-300 md:block"
+                style={{ height: 'calc(100% - 4rem)', transform: `scaleY(${processProgress})` }}
+              />
+              <div className="grid gap-5">
+                {processStepStates.map((step, index) => (
+                  <article
+                    key={step.id}
+                    className={`grid gap-4 rounded-2xl border p-5 transition duration-500 md:grid-cols-[auto_1fr] ${
+                      step.active ? 'border-violet-300/30 bg-white/[0.05]' : 'border-white/8 bg-white/[0.02]'
+                    }`}
+                    style={{ transitionDelay: `${index * 80}ms` }}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div
+                        className={`flex h-11 w-11 items-center justify-center rounded-full border text-sm font-semibold ${
+                          step.active
+                            ? 'border-violet-300/40 bg-violet-400/15 text-violet-100'
+                            : 'border-white/10 bg-white/[0.04] text-slate-300'
+                        }`}
+                      >
+                        {step.label}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white">{step.title}</h3>
+                      <p className="mt-2 text-slate-300">{step.text}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="scroll-mt-28">
           <div className={`mx-auto grid w-[min(1120px,calc(100%-1rem))] gap-8 py-14 md:w-[min(1120px,calc(100%-2rem))] lg:grid-cols-[0.9fr_1.1fr] ${revealClass('skills')}`}>
             <div>
@@ -483,6 +573,15 @@ function App() {
           </div>
         </section>
       </main>
+
+      <a
+        className={`fixed bottom-5 right-5 z-20 inline-flex min-h-12 items-center justify-center rounded-full border border-white/10 bg-[rgba(10,10,15,0.82)] px-4 py-3 text-sm text-white shadow-[0_12px_30px_rgba(0,0,0,0.28)] backdrop-blur-xl transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 ${
+          showBackToTop ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
+        }`}
+        href="#top"
+      >
+        Back to top
+      </a>
     </div>
   )
 }
