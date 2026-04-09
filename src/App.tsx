@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
+
+const HeroScene = lazy(() => import('./components/HeroScene').then((module) => ({ default: module.HeroScene })))
 
 type ExperienceItem = {
   role: string
@@ -290,7 +292,7 @@ function App() {
       <main id="top">
         <section id="hero" className="scroll-mt-24">
           <div className="mx-auto w-[min(1120px,calc(100%-1rem))] px-0 pb-20 pt-24 md:w-[min(1120px,calc(100%-2rem))] md:pt-28">
-            <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr]">
+            <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
               <div className={revealClass('hero')} style={{ transform: `translateY(${heroOffset}px)` }}>
                 <div className="flex flex-col items-start">
                   <div className={sectionLabelClass}>{profile.title}</div>
@@ -320,15 +322,21 @@ function App() {
                 </div>
               </div>
 
-              <aside
-                className={`${cardClass} ${revealClass('hero')} relative overflow-hidden p-7`}
-                aria-label="Professional snapshot"
-              >
+              <div className={`${revealClass('hero')} relative`}>
                 <div
-                  className="pointer-events-none absolute inset-x-[-15%] top-[-20%] h-40 rounded-full bg-violet-400/15 blur-3xl transition-opacity duration-300"
+                  className="pointer-events-none absolute inset-x-[8%] top-[6%] z-0 h-44 rounded-full bg-violet-400/15 blur-3xl transition-opacity duration-300"
                   style={{ opacity: heroGlowOpacity }}
                 />
-                <div className="relative">
+                <div className="relative z-10">
+                  <Suspense
+                    fallback={
+                      <div className="h-[340px] w-full rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_30%_30%,rgba(139,92,246,0.18),transparent_30%),radial-gradient(circle_at_70%_60%,rgba(34,211,238,0.14),transparent_26%),linear-gradient(180deg,#05070d_0%,#0a0d16_100%)] md:h-[460px]" />
+                    }
+                  >
+                    <HeroScene scrollY={scrollY} />
+                  </Suspense>
+                </div>
+                <aside className={`${cardClass} relative z-20 -mt-16 mx-4 p-6 backdrop-blur-md md:mx-8`} aria-label="Professional snapshot">
                   <p className={sectionLabelClass}>Snapshot</p>
                   <h2 className="text-3xl font-semibold text-white">{profile.name}</h2>
                   <p className="mt-4 text-slate-300">{profile.summary}</p>
@@ -337,8 +345,8 @@ function App() {
                       <li key={strength}>{strength}</li>
                     ))}
                   </ul>
-                </div>
-              </aside>
+                </aside>
+              </div>
             </div>
 
             <div className="mt-8 grid gap-4 md:grid-cols-3">
