@@ -120,6 +120,13 @@ const contact = {
   github: 'GitHub available on request',
 }
 
+const navItems = [
+  { href: '#about', label: 'About' },
+  { href: '#experience', label: 'Experience' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#contact', label: 'Contact' },
+]
+
 function App() {
   useEffect(() => {
     const lenis = new Lenis({
@@ -144,24 +151,50 @@ function App() {
   return (
     <div className="page-shell">
       <header className="topbar">
-        <span className="brand">Martin Nagy</span>
-        <nav>
-          <a href="#about">About</a>
-          <a href="#experience">Experience</a>
-          <a href="#projects">Projects</a>
-          <a href="#contact">Contact</a>
+        <a className="brand" href="#top">Martin Nagy</a>
+        <nav aria-label="Primary navigation">
+          {navItems.map((item) => (
+            <a key={item.href} href={item.href}>
+              {item.label}
+            </a>
+          ))}
         </nav>
+        <a className="nav-cta" href={`mailto:${contact.email}`}>
+          Let&apos;s talk
+        </a>
       </header>
 
-      <main>
+      <main id="top">
         <section className="hero section">
-          <div className="eyebrow">Full Stack Developer</div>
-          <h1>Building refined web experiences with practical engineering underneath.</h1>
-          <p className="hero-copy">{profile.intro}</p>
-          <div className="hero-meta">
-            <span>{profile.location}</span>
-            <span>{contact.email}</span>
-            <span>{contact.phone}</span>
+          <div className="hero-grid">
+            <div className="hero-content">
+              <div className="eyebrow">{profile.title}</div>
+              <h1>Building refined web experiences with practical engineering underneath.</h1>
+              <p className="hero-copy">{profile.intro}</p>
+              <div className="hero-actions">
+                <a className="primary-button" href={`mailto:${contact.email}`}>
+                  Get in touch
+                </a>
+                <a className="secondary-button" href="#projects">
+                  View projects
+                </a>
+              </div>
+              <div className="hero-meta">
+                <span>{profile.location}</span>
+                <span>{contact.email}</span>
+                <span>{contact.phone}</span>
+              </div>
+            </div>
+            <aside className="hero-panel" aria-label="Professional snapshot">
+              <p className="section-label">Snapshot</p>
+              <h2>{profile.name}</h2>
+              <p>{profile.summary}</p>
+              <ul className="bullet-list compact-list">
+                {profile.strengths.map((strength) => (
+                  <li key={strength}>{strength}</li>
+                ))}
+              </ul>
+            </aside>
           </div>
           <div className="stats-grid">
             {profile.stats.map((item) => (
@@ -180,11 +213,9 @@ function App() {
           </div>
           <div className="stacked-copy">
             <p>{profile.summary}</p>
-            <ul className="bullet-list">
-              {profile.strengths.map((strength) => (
-                <li key={strength}>{strength}</li>
-              ))}
-            </ul>
+            <p>
+              I enjoy translating complex product requirements into clean user-facing experiences, with a strong focus on maintainability, clarity, and dependable delivery.
+            </p>
           </div>
         </section>
 
@@ -229,6 +260,9 @@ function App() {
                 <h3>{project.name}</h3>
                 <p>{project.description}</p>
                 <p className="impact">{project.impact}</p>
+                <div className="project-footer">
+                  <span>Case study available on request</span>
+                </div>
               </article>
             ))}
           </div>
@@ -292,6 +326,14 @@ function App() {
             <a href={`tel:${contact.phone.replace(/\s+/g, '')}`}>{contact.phone}</a>
             <span>{contact.linkedin}</span>
             <span>{contact.github}</span>
+          </div>
+          <div className="contact-actions">
+            <a className="primary-button" href={`mailto:${contact.email}`}>
+              Start a conversation
+            </a>
+            <a className="secondary-button" href="#top">
+              Back to top
+            </a>
           </div>
         </section>
       </main>
