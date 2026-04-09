@@ -1,0 +1,265 @@
+.page-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(116, 55, 255, 0.18), transparent 32%),
+    linear-gradient(180deg, #0a0a0f 0%, #0d0d14 42%, #09090d 100%);
+  color: #f5f7fb;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  backdrop-filter: blur(18px);
+  background: rgba(10, 10, 15, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.topbar nav {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.topbar a,
+.contact-grid a {
+  color: #d8def2;
+  text-decoration: none;
+}
+
+.brand {
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.section {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 5rem 0;
+}
+
+.hero {
+  padding-top: 7rem;
+}
+
+.eyebrow,
+.section-label,
+.project-stack {
+  display: inline-block;
+  color: #9f8cff;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+}
+
+.hero h1,
+.section h2,
+.timeline-card h3,
+.project-card h3,
+.skills-layout h3 {
+  margin: 0;
+  color: #ffffff;
+}
+
+.hero h1 {
+  max-width: 12ch;
+  font-size: clamp(3rem, 9vw, 6.4rem);
+  line-height: 0.95;
+  margin-top: 1rem;
+}
+
+.hero-copy,
+.stacked-copy p,
+.timeline-card p,
+.project-card p,
+.contact-card p,
+.skills-layout p {
+  color: #b8bfd4;
+}
+
+.hero-copy {
+  max-width: 760px;
+  margin-top: 1.5rem;
+  font-size: 1.15rem;
+  line-height: 1.8;
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+.hero-meta span,
+.contact-grid span,
+.contact-grid a {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.stats-grid,
+.project-grid,
+.contact-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.stats-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 2rem;
+}
+
+.stat-card,
+.timeline-card,
+.project-card,
+.contact-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+}
+
+.stat-card {
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 1.25rem;
+  color: #ffffff;
+}
+
+.stat-card span {
+  display: block;
+  margin-top: 0.35rem;
+  color: #afb7cb;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.compact {
+  padding-top: 3.5rem;
+}
+
+.stacked-copy,
+.skills-layout {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.bullet-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #d7def2;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.section-heading {
+  margin-bottom: 1.5rem;
+}
+
+.timeline {
+  display: grid;
+  gap: 1rem;
+}
+
+.timeline-card,
+.project-card,
+.contact-card {
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.timeline-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.company,
+.timeline-meta {
+  color: #9aa3bb;
+}
+
+.timeline-meta {
+  display: grid;
+  gap: 0.35rem;
+  text-align: right;
+  font-size: 0.95rem;
+}
+
+.summary,
+.impact {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.project-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project-card {
+  min-height: 240px;
+}
+
+.skills-layout {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.contact-card {
+  margin-bottom: 4rem;
+}
+
+.contact-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .topbar nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .section {
+    width: min(1120px, calc(100% - 1.25rem));
+    padding: 3.5rem 0;
+  }
+
+  .two-col,
+  .stats-grid,
+  .project-grid,
+  .skills-layout,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-top {
+    flex-direction: column;
+  }
+
+  .timeline-meta {
+    text-align: left;
+  }
+}
