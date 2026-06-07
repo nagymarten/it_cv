@@ -10,12 +10,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Provider>
-          <SmoothScroll>
+        <SmoothScroll>
+          <Provider>
             <Header />
             {children}
-          </SmoothScroll>
-        </Provider>
+          </Provider>
+        </SmoothScroll>
       </body>
     </html>
   )

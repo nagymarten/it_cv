@@ -13,6 +13,7 @@ import {
   Drawer,
   Portal,
   CloseButton,
+  Button,
 } from '@chakra-ui/react'
 import { ColorModeButton } from '@/components/ui/color-mode'
 
@@ -62,63 +63,40 @@ export default function Header() {
         <Container maxW="6xl" px={{ base: 4, md: 8 }}>
           <Flex h="64px" align="center" justify="space-between">
             {/* Logo */}
-            <Link href="#top" _hover={{ textDecoration: 'none' }}>
-              <HStack gap={2}>
-                <Flex
-                  w="34px"
-                  h="34px"
-                  align="center"
-                  justify="center"
-                  borderRadius="lg"
-                  bg="violet.500"
-                  fontSize="sm"
-                  fontWeight="bold"
-                  color="white"
-                  letterSpacing="tight"
-                >
-                  MN
-                </Flex>
-                <Text
-                  fontSize="sm"
-                  fontWeight="semibold"
-                  color="white"
-                  display={{ base: 'none', sm: 'block' }}
-                  letterSpacing="wide"
-                >
-                  Martin Nagy
-                </Text>
-              </HStack>
-            </Link>
+            <Button
+
+              px={3}
+              py={2}
+              fontWeight="medium"
+              variant="ghost"
+            >
+               M N
+
+            </Button>
 
             {/* Desktop nav */}
             <HStack as="nav" gap={1} display={{ base: 'none', md: 'flex' }}>
               {navItems.map((item) => (
-                <Link
+                <Button
                   key={item.href}
-                  href={item.href}
                   px={3}
                   py={2}
-                  borderRadius="md"
-                  fontSize="sm"
-                  color="gray.300"
                   fontWeight="medium"
-                  transition="color 0.15s, background 0.15s"
-                  _hover={{ color: 'white', bg: 'whiteAlpha.100', textDecoration: 'none' }}
+                  variant="ghost"
                 >
                   {item.label}
-                </Link>
+
+                </Button>
               ))}
-              <ColorModeButton color="gray.300" _hover={{ color: 'white', bg: 'whiteAlpha.100' }} />
+              <ColorModeButton />
             </HStack>
 
             {/* Mobile: color mode + hamburger */}
             <HStack gap={1} display={{ base: 'flex', md: 'none' }}>
-              <ColorModeButton color="gray.300" _hover={{ color: 'white', bg: 'whiteAlpha.100' }} />
+              <ColorModeButton />
               <IconButton
                 aria-label="Open menu"
                 variant="ghost"
-                color="white"
-                _hover={{ bg: 'whiteAlpha.100' }}
                 onClick={() => setMobileOpen(true)}
               >
                 <HamburgerIcon />
