@@ -55,20 +55,20 @@ export default function QuoteSection() {
       as="section"
       ref={sectionRef}
       minH="50vh"
-      bg="black"
+      bg="bg"
       display="flex"
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
       px={{ base: 8, md: 20 }}
     >
-      <Box w="full" h="1px" bg="#1a1a1a" mb={16} />
+      <Box w="full" h="1px" bg="border.subtle" mb={16} />
 
       <Text
         as="blockquote"
         fontFamily="mono"
         fontSize={{ base: 'lg', md: '2xl', lg: '3xl' }}
-        color="white"
+        color="fg"
         fontWeight="700"
         lineHeight="1.4"
         textAlign="center"
@@ -88,7 +88,7 @@ export default function QuoteSection() {
         ))}
       </Text>
 
-      <Box w="full" h="1px" bg="#1a1a1a" mt={16} />
+      <Box w="full" h="1px" bg="border.subtle" mt={16} />
     </Box>
   )
 }

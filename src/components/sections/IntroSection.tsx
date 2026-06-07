@@ -43,7 +43,7 @@ export default function IntroSection() {
       as="section"
       ref={sectionRef}
       minH="60vh"
-      bg="black"
+      bg="bg"
       display="flex"
       alignItems="center"
       py={20}
@@ -54,7 +54,7 @@ export default function IntroSection() {
             fontFamily="mono"
             fontSize="11px"
             letterSpacing="0.25em"
-            color="#444"
+            color="fg.subtle"
           >
             01 / INTRO
           </Text>
@@ -65,7 +65,7 @@ export default function IntroSection() {
               className="intro-para"
               fontFamily="mono"
               fontSize={{ base: 'sm', md: 'md' }}
-              color="#999"
+              color="fg.muted"
               lineHeight="1.9"
             >
               {text}

@@ -55,7 +55,7 @@ export default function HeroSection() {
       ref={sectionRef}
       minH="100vh"
       pt="64px"
-      bg="black"
+      bg="bg"
       display="flex"
       flexDirection="column"
       alignItems="center"
@@ -68,7 +68,7 @@ export default function HeroSection() {
           as="h1"
           fontFamily="mono"
           fontWeight="800"
-          color="white"
+          color="fg"
           lineHeight="1.1"
           letterSpacing="-0.03em"
           fontSize="clamp(3rem, 8vw, 7rem)"
@@ -98,7 +98,7 @@ export default function HeroSection() {
           fontFamily="mono"
           fontSize="11px"
           letterSpacing="0.2em"
-          color="#555"
+          color="fg.subtle"
           css={{
             animation: 'pulse-opacity 2s ease-in-out infinite',
             '@keyframes pulse-opacity': {

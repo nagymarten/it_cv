@@ -46,7 +46,7 @@ export default function GridSection() {
       as="section"
       ref={sectionRef}
       minH="80vh"
-      bg="black"
+      bg="bg"
       display="flex"
       flexDirection="column"
       justifyContent="center"
@@ -57,7 +57,7 @@ export default function GridSection() {
         fontFamily="mono"
         fontSize="11px"
         letterSpacing="0.25em"
-        color="#444"
+        color="fg.subtle"
         mb={12}
       >
         02 / WORKS
@@ -69,19 +69,19 @@ export default function GridSection() {
             key={card.num}
             className="grid-card"
             border="1px solid"
-            borderColor="#222"
+            borderColor="border.subtle"
             p={6}
-            _hover={{ borderColor: '#444' }}
+            _hover={{ borderColor: 'border' }}
             transition="border-color 0.2s"
           >
             <VStack align="flex-start" gap={3}>
-              <Text fontFamily="mono" fontSize="10px" color="#444" letterSpacing="0.2em">
+              <Text fontFamily="mono" fontSize="10px" color="fg.subtle" letterSpacing="0.2em">
                 {card.num}
               </Text>
-              <Text fontFamily="mono" fontSize="sm" color="white" fontWeight="600">
+              <Text fontFamily="mono" fontSize="sm" color="fg" fontWeight="600">
                 {card.title}
               </Text>
-              <Text fontFamily="mono" fontSize="xs" color="#666" lineHeight="1.7">
+              <Text fontFamily="mono" fontSize="xs" color="fg.muted" lineHeight="1.7">
                 {card.desc}
               </Text>
             </VStack>

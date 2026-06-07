@@ -36,7 +36,7 @@ export default function ClosingSection() {
       as="section"
       ref={sectionRef}
       minH="100vh"
-      bg="black"
+      bg="bg"
       display="flex"
       alignItems="center"
       justifyContent="center"
@@ -46,7 +46,7 @@ export default function ClosingSection() {
         fontFamily="mono"
         fontSize={{ base: '3xl', md: '5xl', lg: '6xl' }}
         fontWeight="800"
-        color="white"
+        color="fg"
         letterSpacing="-0.03em"
         display="inline-flex"
         alignItems="baseline"
@@ -58,7 +58,7 @@ export default function ClosingSection() {
           display="inline-block"
           w="3px"
           h={{ base: '2rem', md: '3rem' }}
-          bg="white"
+          bg="fg"
           ml={2}
           css={{
             animation: 'blink 1.1s step-end infinite',
