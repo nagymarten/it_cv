@@ -7,7 +7,8 @@ Personal portfolio and CV site built with Next.js 16 App Router, deployed on Ver
 - **Next.js 16** — App Router, static generation
 - **React 19** — Server Components + Client Components
 - **TypeScript** — strict mode
-- **Tailwind CSS v4** — via PostCSS
+- **Chakra UI v3** — component library (Provider, Drawer, Box, Flex, etc.)
+- **Tailwind CSS v4** — via PostCSS (utility classes alongside Chakra)
 - **GSAP + ScrollTrigger** — scroll animations
 - **Lenis** — smooth scroll (GSAP ticker integration)
 - **Playwright** — visual regression tests

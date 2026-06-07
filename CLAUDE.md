@@ -24,25 +24,25 @@ npx playwright test --update-snapshots
 
 ## Architecture
 
-Next.js 16 App Router portfolio site. CV content lives in `src/data/cv.ts` as typed constants. `app/page.tsx` is a Server Component that assembles all sections — CV text renders as static HTML at build time.
+Next.js 16 App Router portfolio site rebuilt with Chakra UI v3. CV content lives in `src/data/cv.ts` as typed constants. `app/page.tsx` is a Server Component that assembles all sections.
 
-**`app/page.tsx`** — Server Component page shell. Wraps all sections in `ScrollProvider` (client), assembles Server and Client Components.
+**`app/layout.tsx`** — Wraps the app in `<Provider>` (Chakra UI + next-themes). Has `suppressHydrationWarning` on `<html>`.
 
-**`src/data/cv.ts`** — All typed CV content constants (profile, experiences, projects, skills, education, contact, navItems) and shared Tailwind class strings.
+**`app/page.tsx`** — Server Component page shell. Assembles Header and section components.
 
-**`src/components/ScrollProvider.tsx`** — `'use client'`, Lenis + GSAP orchestration. Provides Lenis via `ScrollContext`. Uses GSAP ticker to drive Lenis's rAF (correct integration pattern for scroll + animation sync). Picks up `data-parallax` elements on mount.
+**`src/components/ui/`** — Auto-generated Chakra UI snippets: `provider.tsx`, `color-mode.tsx`, `toaster.tsx`, `tooltip.tsx`. Do not edit these manually; regenerate with `npx @chakra-ui/cli snippet add`.
 
-**`src/context/ScrollContext.tsx`** — React Context providing Lenis instance. `useScroll()` hook used by Header, ProgressBar, BackToTop, HeroSection.
+**`src/components/Header.tsx`** — `'use client'`, Chakra UI nav bar. Fixed position, scroll-based frosted glass, mobile Drawer menu.
 
-**`src/components/HeroSection.tsx`** — `'use client'`, hero layout + lazy HeroScene + GSAP parallax + scroll glow effect.
+**`src/data/cv.ts`** — All typed CV content constants (profile, experiences, projects, skills, education, contact, navItems).
 
-**`src/components/ProjectsSection.tsx`** — `'use client'`, GSAP pin + entry animation with `gsap.matchMedia()` for desktop/mobile.
+## Chakra UI v3
 
-**`src/components/SectionReveal.tsx`** — `'use client'`, IntersectionObserver reveal wrapper. Add `id` prop to create anchor targets.
-
-**`src/components/Header.tsx`** — `'use client'`, nav + mobile menu + scroll-based blur + active section tracking via `[data-nav-section]` elements.
-
-**Server Components** (`ExperienceSection`, `AboutSection`, `SkillsSection`, `EducationSection`, `ContactSection`) — pure HTML + Tailwind, no hooks, import from `src/data/cv.ts`.
+- Provider is at `src/components/ui/provider.tsx` and wraps the app in `app/layout.tsx`.
+- Use **semantic tokens** (`bg.subtle`, `fg.default`, `border.subtle`) for theme-aware styles.
+- Use `colorPalette` (not `colorScheme`) on interactive components: `<Button colorPalette="violet">`.
+- Components that use hooks or browser events must be `'use client'`; static/data-only components can remain Server Components.
+- Chakra UI coexists with Tailwind CSS v4 — prefer Chakra primitives for layout and interactive components, Tailwind for one-off utility classes if needed.
 
 ## Testing
 

@@ -1,118 +1,206 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
-import { useScroll } from '@/context/ScrollContext'
-import { navItems, contact } from '@/data/cv'
+
+import { useState, useEffect } from 'react'
+import {
+  Box,
+  Container,
+  Flex,
+  HStack,
+  Text,
+  Link,
+  IconButton,
+  VStack,
+  Drawer,
+  Portal,
+  CloseButton,
+} from '@chakra-ui/react'
+import { ColorModeButton } from '@/components/ui/color-mode'
+
+const navItems = [
+  { label: 'About', href: '#about' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Skills', href: '#skills' },
+  { label: 'Contact', href: '#contact' },
+]
+
+function HamburgerIcon() {
+  return (
+    <Box as="span" display="flex" flexDirection="column" gap="5px">
+      <Box w="22px" h="2px" bg="white" borderRadius="full" />
+      <Box w="22px" h="2px" bg="white" borderRadius="full" />
+      <Box w="14px" h="2px" bg="white" borderRadius="full" />
+    </Box>
+  )
+}
 
 export default function Header() {
-  const lenis = useScroll()
-  const [activeSection, setActiveSection] = useState('#about')
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const headerRef = useRef<HTMLElement>(null)
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
-  // Scroll-based header blur
   useEffect(() => {
-    if (!lenis) return
-    const handler = ({ scroll }: { scroll: number }) => {
-      const el = headerRef.current
-      if (!el) return
-      const scrolled = scroll > 20
-      el.classList.toggle('border-white/10', scrolled)
-      el.classList.toggle('bg-[rgba(10,10,15,0.82)]', scrolled)
-      el.classList.toggle('shadow-[0_10px_40px_rgba(0,0,0,0.18)]', scrolled)
-      el.classList.toggle('border-white/5', !scrolled)
-      el.classList.toggle('bg-[rgba(10,10,15,0.58)]', !scrolled)
-    }
-    lenis.on('scroll', handler)
-    return () => { lenis.off('scroll', handler) }
-  }, [lenis])
-
-  // Active section tracking
-  useEffect(() => {
-    const sections = document.querySelectorAll<HTMLElement>('[data-nav-section]')
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (visible?.target?.id) {
-          setActiveSection(`#${visible.target.id}`)
-        }
-      },
-      { threshold: [0.2, 0.45, 0.7], rootMargin: '-20% 0px -20% 0px' },
-    )
-    sections.forEach((s) => observer.observe(s))
-    return () => observer.disconnect()
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <header
-      ref={headerRef}
-      className="sticky top-0 z-20 border-b border-white/5 bg-[rgba(10,10,15,0.58)] px-4 py-4 backdrop-blur-xl transition-all duration-300 supports-[padding:env(safe-area-inset-top)]:pt-[env(safe-area-inset-top)] md:px-8"
-    >
-      <div className="flex items-center justify-between gap-4">
-        <a className="text-sm uppercase tracking-[0.18em] text-white" href="#top">
-          Martin Nagy
-        </a>
+    <>
+      <Box
+        as="header"
+        position="fixed"
+        top={0}
+        left={0}
+        right={0}
+        zIndex={50}
+        transition="background 0.3s, backdrop-filter 0.3s, border-color 0.3s"
+        bg={scrolled ? 'rgba(8,8,13,0.72)' : 'transparent'}
+        style={{ backdropFilter: scrolled ? 'blur(16px)' : 'none' }}
+        borderBottom="1px solid"
+        borderColor={scrolled ? 'whiteAlpha.100' : 'transparent'}
+      >
+        <Container maxW="6xl" px={{ base: 4, md: 8 }}>
+          <Flex h="64px" align="center" justify="space-between">
+            {/* Logo */}
+            <Link href="#top" _hover={{ textDecoration: 'none' }}>
+              <HStack gap={2}>
+                <Flex
+                  w="34px"
+                  h="34px"
+                  align="center"
+                  justify="center"
+                  borderRadius="lg"
+                  bg="violet.500"
+                  fontSize="sm"
+                  fontWeight="bold"
+                  color="white"
+                  letterSpacing="tight"
+                >
+                  MN
+                </Flex>
+                <Text
+                  fontSize="sm"
+                  fontWeight="semibold"
+                  color="white"
+                  display={{ base: 'none', sm: 'block' }}
+                  letterSpacing="wide"
+                >
+                  Martin Nagy
+                </Text>
+              </HStack>
+            </Link>
 
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          aria-expanded={mobileMenuOpen}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 md:hidden"
-          onClick={() => setMobileMenuOpen((prev) => !prev)}
-        >
-          <span className="text-lg leading-none">{mobileMenuOpen ? '×' : '☰'}</span>
-        </button>
+            {/* Desktop nav */}
+            <HStack as="nav" gap={1} display={{ base: 'none', md: 'flex' }}>
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  px={3}
+                  py={2}
+                  borderRadius="md"
+                  fontSize="sm"
+                  color="gray.300"
+                  fontWeight="medium"
+                  transition="color 0.15s, background 0.15s"
+                  _hover={{ color: 'white', bg: 'whiteAlpha.100', textDecoration: 'none' }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <ColorModeButton color="gray.300" _hover={{ color: 'white', bg: 'whiteAlpha.100' }} />
+            </HStack>
 
-        <nav aria-label="Primary navigation" className="hidden items-center justify-center gap-5 text-sm text-slate-300 md:flex">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.href
-            return (
-              <a
-                key={item.href}
-                className={`rounded-full px-3 py-2 transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 ${
-                  isActive ? 'bg-white/8 text-white' : 'hover:text-white'
-                }`}
-                href={item.href}
+            {/* Mobile: color mode + hamburger */}
+            <HStack gap={1} display={{ base: 'flex', md: 'none' }}>
+              <ColorModeButton color="gray.300" _hover={{ color: 'white', bg: 'whiteAlpha.100' }} />
+              <IconButton
+                aria-label="Open menu"
+                variant="ghost"
+                color="white"
+                _hover={{ bg: 'whiteAlpha.100' }}
+                onClick={() => setMobileOpen(true)}
               >
-                {item.label}
-              </a>
-            )
-          })}
-        </nav>
+                <HamburgerIcon />
+              </IconButton>
+            </HStack>
+          </Flex>
+        </Container>
+      </Box>
 
-        <a
-          className="hidden min-h-12 items-center justify-center rounded-full border border-violet-300/35 bg-violet-400/10 px-4 py-3 text-sm text-slate-100 transition hover:bg-violet-400/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 md:inline-flex"
-          href={`mailto:${contact.email}`}
-        >
-          Let&apos;s talk
-        </a>
-      </div>
-
-      {mobileMenuOpen && (
-        <div className="mt-4 grid gap-3 rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:hidden">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.href
-            return (
-              <a
-                key={item.href}
-                className={`rounded-2xl px-4 py-3 text-sm transition ${isActive ? 'bg-white/8 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
+      {/* Mobile drawer */}
+      <Drawer.Root
+        open={mobileOpen}
+        onOpenChange={(e) => setMobileOpen(e.open)}
+        placement="end"
+      >
+        <Portal>
+          <Drawer.Backdrop bg="blackAlpha.700" backdropFilter="blur(4px)" />
+          <Drawer.Positioner>
+            <Drawer.Content
+              bg="gray.950"
+              borderLeft="1px solid"
+              borderColor="whiteAlpha.100"
+              maxW="280px"
+            >
+              <Drawer.Header
+                borderBottom="1px solid"
+                borderColor="whiteAlpha.100"
+                py={4}
+                px={6}
               >
-                {item.label}
-              </a>
-            )
-          })}
-          <a
-            className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-violet-300/35 bg-violet-400/10 px-4 py-3 text-sm text-slate-100 transition hover:bg-violet-400/20"
-            href={`mailto:${contact.email}`}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Let&apos;s talk
-          </a>
-        </div>
-      )}
-    </header>
+                <Flex align="center" justify="space-between">
+                  <HStack gap={2}>
+                    <Flex
+                      w="30px"
+                      h="30px"
+                      align="center"
+                      justify="center"
+                      borderRadius="md"
+                      bg="violet.500"
+                      fontSize="xs"
+                      fontWeight="bold"
+                      color="white"
+                    >
+                      MN
+                    </Flex>
+                    <Text fontSize="sm" fontWeight="semibold" color="white">
+                      Martin Nagy
+                    </Text>
+                  </HStack>
+                  <CloseButton
+                    color="gray.400"
+                    _hover={{ color: 'white', bg: 'whiteAlpha.100' }}
+                    onClick={() => setMobileOpen(false)}
+                  />
+                </Flex>
+              </Drawer.Header>
+
+              <Drawer.Body px={4} py={6}>
+                <VStack align="stretch" gap={1}>
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      px={4}
+                      py={3}
+                      borderRadius="lg"
+                      fontSize="sm"
+                      fontWeight="medium"
+                      color="gray.300"
+                      transition="color 0.15s, background 0.15s"
+                      _hover={{ color: 'white', bg: 'whiteAlpha.100', textDecoration: 'none' }}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </VStack>
+              </Drawer.Body>
+            </Drawer.Content>
+          </Drawer.Positioner>
+        </Portal>
+      </Drawer.Root>
+    </>
   )
 }
