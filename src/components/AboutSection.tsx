@@ -2,7 +2,7 @@ import { sectionLabelClass, revealBaseClass, profile } from '@/data/cv'
 
 export default function AboutSection() {
   return (
-    <section id="about" className="scroll-mt-28">
+    <section className="scroll-mt-28">
       <div className={`mx-auto grid w-[min(1120px,calc(100%-1rem))] gap-8 py-16 md:w-[min(1120px,calc(100%-2rem))] lg:grid-cols-[0.9fr_1.1fr] ${revealBaseClass}`}>
         <div data-parallax data-depth="0.08">
           <p className={sectionLabelClass}>About</p>

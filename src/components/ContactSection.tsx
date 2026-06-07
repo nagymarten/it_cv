@@ -2,7 +2,7 @@ import { sectionLabelClass, cardClass, revealBaseClass, contact } from '@/data/c
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="scroll-mt-28">
+    <section className="scroll-mt-28">
       <div className={`${cardClass} ${revealBaseClass} mx-auto mb-10 w-[min(1120px,calc(100%-1rem))] overflow-hidden p-6 pb-8 md:w-[min(1120px,calc(100%-2rem))] md:p-8 md:pb-10`}>
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/50 to-transparent" />
         <p className={sectionLabelClass}>Contact</p>

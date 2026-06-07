@@ -2,7 +2,7 @@ import { sectionLabelClass, cardClass, revealBaseClass, experiences } from '@/da
 
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="scroll-mt-28">
+    <section className="scroll-mt-28">
       <div className="mx-auto w-[min(1120px,calc(100%-1rem))] py-16 md:w-[min(1120px,calc(100%-2rem))]">
         <div className={`mb-6 ${revealBaseClass}`} data-parallax data-depth="0.06">
           <p className={sectionLabelClass}>Experience</p>
