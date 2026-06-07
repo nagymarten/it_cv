@@ -22,9 +22,10 @@ export default function GridSection() {
   useEffect(() => {
     if (!sectionRef.current) return
     const ctx = gsap.context(() => {
-      // Set initial state for flash prevention
-      gsap.set('.grid-card', { opacity: 0, y: 50 })
-      ScrollTrigger.batch('.grid-card', {
+      // Scope selector to section ref to avoid animating cards in other sections
+      const cards = sectionRef.current!.querySelectorAll<HTMLElement>('.grid-card')
+      gsap.set(cards, { opacity: 0, y: 50 })
+      ScrollTrigger.batch(cards, {
         onEnter: (batch) =>
           gsap.to(batch, {
             y: 0,
