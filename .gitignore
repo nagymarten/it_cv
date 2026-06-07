@@ -27,6 +27,7 @@ dist-ssr
 
 # Claude
 .agents
+.superpowers
 
 # Tests
 test-results
