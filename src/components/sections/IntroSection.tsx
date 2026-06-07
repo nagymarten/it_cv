@@ -19,11 +19,11 @@ export default function IntroSection() {
   useEffect(() => {
     if (!sectionRef.current) return
     const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>('.intro-para').forEach((el, i) => {
+      gsap.utils.toArray<HTMLElement>('.intro-para', sectionRef.current).forEach((el, i) => {
         gsap.set(el, { opacity: 0, y: 40 })
-        gsap.from(el, {
-          y: 40,
-          opacity: 0,
+        gsap.to(el, {
+          y: 0,
+          opacity: 1,
           duration: 0.8,
           ease: 'power2.out',
           delay: i * 0.15,
