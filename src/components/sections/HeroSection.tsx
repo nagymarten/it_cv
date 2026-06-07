@@ -15,17 +15,12 @@ export default function HeroSection() {
   useEffect(() => {
     if (!sectionRef.current) return
     const ctx = gsap.context(() => {
-      // Prevent flash-of-visible-content by setting initial state synchronously
-      gsap.set('.hero-word', { opacity: 0, y: 60 })
-
-      // Word stagger entrance
-      gsap.from('.hero-word', {
-        y: 60,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.08,
-        ease: 'power3.out',
-      })
+      // Words start at y:60 (opacity already 0 via inline style in JSX)
+      gsap.fromTo(
+        sectionRef.current!.querySelectorAll('.hero-word'),
+        { y: 60, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: 'power3.out' }
+      )
 
       // Parallax scrub on headline
       gsap.to('.hero-headline', {
@@ -83,7 +78,7 @@ export default function HeroSection() {
           gap={{ base: '0.3em', md: '0.4em' }}
         >
           {HEADLINE.map((word, i) => (
-            <Box key={i} as="span" className="hero-word" display="inline-block">
+            <Box key={i} as="span" className="hero-word" display="inline-block" style={{ opacity: 0 }}>
               {word}
             </Box>
           ))}

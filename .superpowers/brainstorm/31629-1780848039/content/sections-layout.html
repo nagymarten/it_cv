@@ -1,0 +1,107 @@
+<h2>Hány szekció, milyen struktúra?</h2>
+<p class="subtitle">Mindegyik A stílusú (parallax + fade-in), C hangulat (fekete mono) — a különbség a ritmus és az arány</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="three-fullscreen" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#111;padding:16px;min-height:200px;font-family:monospace;">
+      <!-- 3 full-screen sections diagram -->
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:4px;padding:10px 12px;position:relative;">
+          <div style="color:#333;font-size:8px;letter-spacing:2px">01 / HERO</div>
+          <div style="color:#eee;font-size:13px;font-weight:800;margin-top:4px">Lorem ipsum<br>dolor sit.</div>
+          <div style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#222;font-size:20px">≡</div>
+          <div style="color:#444;font-size:8px;margin-top:6px">↓ scroll to reveal</div>
+        </div>
+        <div style="background:#161616;border:1px solid #222;border-radius:4px;padding:10px 12px;">
+          <div style="color:#333;font-size:8px;letter-spacing:2px">02 / TEXT</div>
+          <div style="color:#888;font-size:9px;margin-top:4px;line-height:1.6">consectetur adipiscing<br>sed do eiusmod →</div>
+        </div>
+        <div style="background:#121212;border:1px solid #1e1e1e;border-radius:4px;padding:10px 12px;">
+          <div style="color:#333;font-size:8px;letter-spacing:2px">03 / CLOSING</div>
+          <div style="color:#555;font-size:9px;margin-top:4px">tempor incididunt</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;display:flex;justify-content:flex-end;gap:4px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#333"></div>
+        <div style="width:6px;height:6px;border-radius:50%;background:#444"></div>
+        <div style="width:6px;height;border-radius:50%;background:#222"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — 3 teljes-képernyős szekció</h3>
+      <p>Hero (nagy szöveg + scroll indicator) → Szöveg szekció (bekezdések fade-in-nel) → Záró szekció. Minden szekció <code>100vh</code>, tiszta ritmus, fókuszált.</p>
+      <p style="margin-top:6px;font-size:11px;color:#888">⚡ Gyors · Tiszta · Fókuszált · Erős ritmus</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="five-mixed" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#111;padding:16px;min-height:200px;font-family:monospace;">
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:3px;padding:8px 12px;height:32px;display:flex;align-items:center;justify-content:space-between">
+          <div style="color:#eee;font-size:11px;font-weight:800">HERO_</div>
+          <div style="color:#333;font-size:8px">100vh</div>
+        </div>
+        <div style="background:#181818;border:1px solid #252525;border-radius:3px;padding:8px 12px;height:24px;display:flex;align-items:center;justify-content:space-between">
+          <div style="color:#666;font-size:9px">→ intro szöveg</div>
+          <div style="color:#333;font-size:8px">60vh</div>
+        </div>
+        <div style="background:#161616;border:1px solid #222;border-radius:3px;padding:8px 12px;height:28px;display:flex;align-items:center;justify-content:space-between">
+          <div style="color:#555;font-size:9px">grid / lista</div>
+          <div style="color:#333;font-size:8px">80vh</div>
+        </div>
+        <div style="background:#141414;border:1px solid #1e1e1e;border-radius:3px;padding:8px 12px;height:24px;display:flex;align-items:center;justify-content:space-between">
+          <div style="color:#444;font-size:9px">quote / highlight</div>
+          <div style="color:#333;font-size:8px">50vh</div>
+        </div>
+        <div style="background:#121212;border:1px solid #1a1a1a;border-radius:3px;padding:8px 12px;height:20px;display:flex;align-items:center;justify-content:space-between">
+          <div style="color:#333;font-size:9px">closing</div>
+          <div style="color:#333;font-size:8px">100vh</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — 5 vegyes magasságú szekció</h3>
+      <p>Hero → Intro szöveg (rövidebb) → Grid/lista animáció (staggered) → Nagy idézet (highlight) → Záró. Változatos ritmus, több animáció-típus mutatható be.</p>
+      <p style="margin-top:6px;font-size:11px;color:#888">🎭 Változatos · Több animáció · Teljesebb élmény</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="infinite-flow" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#111;padding:16px;min-height:200px;font-family:monospace;position:relative;overflow:hidden;">
+      <div style="position:absolute;left:20px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,#333,#333,transparent)"></div>
+      <div style="margin-left:30px;display:flex;flex-direction:column;gap:12px;padding-top:8px;">
+        <div style="position:relative">
+          <div style="position:absolute;left:-34px;top:3px;width:8px;height:8px;border-radius:50%;background:#eee"></div>
+          <div style="color:#eee;font-size:12px;font-weight:800">Lorem ipsum →</div>
+        </div>
+        <div style="position:relative">
+          <div style="position:absolute;left:-34px;top:3px;width:8px;height:8px;border-radius:50%;background:#666"></div>
+          <div style="color:#666;font-size:10px">consectetur adipiscing elit</div>
+        </div>
+        <div style="position:relative">
+          <div style="position:absolute;left:-34px;top:3px;width:8px;height:8px;border-radius:50%;background:#444"></div>
+          <div style="color:#444;font-size:10px">sed do eiusmod tempor</div>
+        </div>
+        <div style="position:relative">
+          <div style="position:absolute;left:-34px;top:3px;width:8px;height:8px;border-radius:50%;background:#2a2a2a"></div>
+          <div style="color:#2a2a2a;font-size:10px">incididunt ut labore...</div>
+        </div>
+        <div style="position:relative">
+          <div style="position:absolute;left:-34px;top:3px;width:6px;height:6px;border-radius:50%;border:1px solid #222"></div>
+          <div style="color:#222;font-size:10px">et dolore magna →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Folyamatos timeline flow</h3>
+      <p>Egyetlen hosszú oldal, bal oldali idővonalon haladunk végig. A szöveg-blokkok sorban "gyúlnak ki" scrollra. Minimalista, de erős vizuális narratíva — mint egy CV timeline.</p>
+      <p style="margin-top:6px;font-size:11px;color:#888">📜 Narratív · Timeline feeling · CV-re tökéletes</p>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:16px;padding:12px 16px;background:#1a1a1a;border-radius:8px;border-left:3px solid #666;">
+  <p style="margin:0;font-size:12px;color:#aaa">💡 CV demo kontextusban a <strong style="color:#fff">B (5 szekció)</strong> adja a legtöbb animáció-változatosságot, de a <strong style="color:#fff">C (Timeline)</strong> a leginkább CV-specifikus feeling. <strong style="color:#fff">A</strong> a legegyszerűbb megvalósítani.</p>
+</div>
