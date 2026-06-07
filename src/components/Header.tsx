@@ -19,7 +19,6 @@ import { ColorModeButton } from '@/components/ui/color-mode'
 
 const navItems = [
   { label: 'About', href: '#about' },
-  { label: 'Experience', href: '#experience' },
   { label: 'Projects', href: '#projects' },
   { label: 'Skills', href: '#skills' },
   { label: 'Contact', href: '#contact' },
@@ -28,9 +27,9 @@ const navItems = [
 function HamburgerIcon() {
   return (
     <Box as="span" display="flex" flexDirection="column" gap="5px">
-      <Box w="22px" h="2px" bg="white" borderRadius="full" />
-      <Box w="22px" h="2px" bg="white" borderRadius="full" />
-      <Box w="14px" h="2px" bg="white" borderRadius="full" />
+      <Box w="22px" h="2px" bg="fg" borderRadius="full" />
+      <Box w="22px" h="2px" bg="fg" borderRadius="full" />
+      <Box w="14px" h="2px" bg="fg" borderRadius="full" />
     </Box>
   )
 }
@@ -55,37 +54,23 @@ export default function Header() {
         right={0}
         zIndex={50}
         transition="background 0.3s, backdrop-filter 0.3s, border-color 0.3s"
-        bg={scrolled ? 'rgba(8,8,13,0.72)' : 'transparent'}
+        bg={scrolled ? 'bg.panel/80' : 'transparent'}
         style={{ backdropFilter: scrolled ? 'blur(16px)' : 'none' }}
         borderBottom="1px solid"
-        borderColor={scrolled ? 'whiteAlpha.100' : 'transparent'}
+        borderColor={scrolled ? 'border.subtle' : 'transparent'}
       >
         <Container maxW="6xl" px={{ base: 4, md: 8 }}>
           <Flex h="64px" align="center" justify="space-between">
             {/* Logo */}
-            <Button
-
-              px={3}
-              py={2}
-              fontWeight="medium"
-              variant="ghost"
-            >
-               M N
-
+            <Button px={3} py={2} fontWeight="medium" variant="ghost">
+              M N
             </Button>
 
             {/* Desktop nav */}
             <HStack as="nav" gap={1} display={{ base: 'none', md: 'flex' }}>
               {navItems.map((item) => (
-                <Button
-                  key={item.href}
-                  px={3}
-                  py={2}
-                  fontWeight="medium"
-                  variant="ghost"
-                >
+                <Button key={item.href} px={3} py={2} fontWeight="medium" variant="ghost">
                   {item.label}
-
                 </Button>
               ))}
               <ColorModeButton />
@@ -113,17 +98,17 @@ export default function Header() {
         placement="end"
       >
         <Portal>
-          <Drawer.Backdrop bg="blackAlpha.700" backdropFilter="blur(4px)" />
+          <Drawer.Backdrop bg="rgba(0,0,0,0.7)" backdropFilter="blur(4px)" />
           <Drawer.Positioner>
             <Drawer.Content
-              bg="gray.950"
+              bg="bg.panel"
               borderLeft="1px solid"
-              borderColor="whiteAlpha.100"
+              borderColor="border.subtle"
               maxW="280px"
             >
               <Drawer.Header
                 borderBottom="1px solid"
-                borderColor="whiteAlpha.100"
+                borderColor="border.subtle"
                 py={4}
                 px={6}
               >
@@ -135,20 +120,20 @@ export default function Header() {
                       align="center"
                       justify="center"
                       borderRadius="md"
-                      bg="violet.500"
+                      bg="purple.500"
                       fontSize="xs"
                       fontWeight="bold"
                       color="white"
                     >
                       MN
                     </Flex>
-                    <Text fontSize="sm" fontWeight="semibold" color="white">
+                    <Text fontSize="sm" fontWeight="semibold" color="fg">
                       Martin Nagy
                     </Text>
                   </HStack>
                   <CloseButton
-                    color="gray.400"
-                    _hover={{ color: 'white', bg: 'whiteAlpha.100' }}
+                    color="fg.muted"
+                    _hover={{ color: 'fg', bg: 'bg.subtle' }}
                     onClick={() => setMobileOpen(false)}
                   />
                 </Flex>
@@ -165,9 +150,9 @@ export default function Header() {
                       borderRadius="lg"
                       fontSize="sm"
                       fontWeight="medium"
-                      color="gray.300"
+                      color="fg.muted"
                       transition="color 0.15s, background 0.15s"
-                      _hover={{ color: 'white', bg: 'whiteAlpha.100', textDecoration: 'none' }}
+                      _hover={{ color: 'fg', bg: 'bg.subtle', textDecoration: 'none' }}
                       onClick={() => setMobileOpen(false)}
                     >
                       {item.label}

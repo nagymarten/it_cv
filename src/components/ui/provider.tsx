@@ -5,11 +5,14 @@ import {
   ColorModeProvider,
   type ColorModeProviderProps,
 } from "./color-mode"
+import { EmotionStyleRegistry } from "./EmotionStyleRegistry"
 
 export function Provider(props: ColorModeProviderProps) {
   return (
-    <ChakraProvider value={defaultSystem}>
-      <ColorModeProvider {...props} />
-    </ChakraProvider>
+    <EmotionStyleRegistry>
+      <ChakraProvider value={defaultSystem}>
+        <ColorModeProvider {...props} />
+      </ChakraProvider>
+    </EmotionStyleRegistry>
   )
 }
