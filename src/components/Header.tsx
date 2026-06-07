@@ -28,7 +28,7 @@ export default function Header() {
 
   // Active section tracking
   useEffect(() => {
-    const sections = document.querySelectorAll<HTMLElement>('section[id]')
+    const sections = document.querySelectorAll<HTMLElement>('[data-nav-section]')
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries

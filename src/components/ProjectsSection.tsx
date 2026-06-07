@@ -13,6 +13,8 @@ export default function ProjectsSection() {
   useEffect(() => {
     if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
+    let mm: gsap.MatchMedia
+
     const ctx = gsap.context(() => {
       // Entry animation for each card
       cardsRef.current.forEach((card, index) => {
@@ -35,7 +37,7 @@ export default function ProjectsSection() {
 
       const cards = cardsRef.current.filter(Boolean)
       const heading = sectionRef.current?.querySelector('[data-projects-heading]') ?? null
-      const mm = gsap.matchMedia()
+      mm = gsap.matchMedia()
 
       mm.add('(min-width: 1024px)', () => {
         const tl = gsap.timeline({
@@ -78,11 +80,14 @@ export default function ProjectsSection() {
       })
     }, sectionRef)
 
-    return () => ctx.revert()
+    return () => {
+      mm.revert()
+      ctx.revert()
+    }
   }, [])
 
   return (
-    <section id="projects" ref={sectionRef} className="scroll-mt-28">
+    <section id="projects" ref={sectionRef} data-nav-section className="scroll-mt-28">
       <div className="mx-auto w-[min(1120px,calc(100%-1rem))] py-16 md:w-[min(1120px,calc(100%-2rem))]">
         <div className="mb-6" data-projects-heading>
           <p className={sectionLabelClass}>Projects</p>

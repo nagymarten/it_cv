@@ -12,18 +12,20 @@ export default function ScrollProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const instance = new Lenis({
-      autoRaf: true,
+      autoRaf: false,
       smoothWheel: true,
       anchors: { offset: 96 },
       duration: 1.05,
       wheelMultiplier: 0.95,
       touchMultiplier: 1,
     })
-    setLenis(instance)
 
-    instance.on('scroll', () => {
-      ScrollTrigger.update()
-    })
+    // Let GSAP's ticker drive Lenis (same frame as ScrollTrigger)
+    const rafCallback = (time: number) => { instance.raf(time * 1000) }
+    gsap.ticker.add(rafCallback)
+    gsap.ticker.lagSmoothing(0)
+
+    setLenis(instance)
 
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((element) => {
@@ -42,6 +44,7 @@ export default function ScrollProvider({ children }: { children: ReactNode }) {
     })
 
     return () => {
+      gsap.ticker.remove(rafCallback)
       instance.destroy()
       ctx.revert()
       setLenis(null)

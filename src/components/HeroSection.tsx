@@ -76,7 +76,7 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section id="hero" ref={sectionRef} className="scroll-mt-24">
+    <section id="hero" ref={sectionRef} data-nav-section className="scroll-mt-24">
       <div className="mx-auto w-[min(1120px,calc(100%-1rem))] px-0 pb-20 pt-24 md:w-[min(1120px,calc(100%-2rem))] md:pt-28">
         <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div
@@ -153,7 +153,7 @@ export default function HeroSection() {
           {profile.stats.map((item) => (
             <div
               key={item.label}
-              className={`${cardClass} rounded-2xl p-5 transition hover:-translate-y-0.5 translate-y-0 opacity-100 transition duration-700 ease-out will-change-transform`}
+              className={`${cardClass} rounded-2xl p-5 hover:-translate-y-0.5 translate-y-0 opacity-100 transition duration-700 ease-out will-change-transform`}
             >
               <strong className="block text-xl text-white">{item.value}</strong>
               <span className="mt-1 block text-slate-400">{item.label}</span>

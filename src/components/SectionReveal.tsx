@@ -32,6 +32,7 @@ export default function SectionReveal({ id, children, className }: Props) {
     <div
       ref={ref}
       id={id}
+      data-nav-section
       className={`${revealBaseClass} ${revealed ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'} ${className ?? ''}`}
     >
       {children}
