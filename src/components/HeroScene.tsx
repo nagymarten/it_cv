@@ -1,5 +1,8 @@
+'use client'
+import { useEffect, useRef } from 'react'
+
 type HeroSceneProps = {
-  scrollY: number
+  scrollYRef: { current: number }
 }
 
 const orbs = [
@@ -75,16 +78,57 @@ const particles = Array.from({ length: 18 }, (_, index) => ({
   factorX: (index % 3) * 0.01,
 }))
 
-export function HeroScene({ scrollY }: HeroSceneProps) {
-  const normalizedScroll = Math.min(scrollY / 1600, 1)
+export function HeroScene({ scrollYRef }: HeroSceneProps) {
+  const ringsRef = useRef<(HTMLDivElement | null)[]>([])
+  const orbsRef = useRef<(HTMLDivElement | null)[]>([])
+  const particlesRef = useRef<(HTMLDivElement | null)[]>([])
+  const floatBoxRef = useRef<HTMLDivElement | null>(null)
+  const tiltBoxRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    let rafId: number
+    const tick = () => {
+      const n = Math.min(scrollYRef.current / 1600, 1)
+
+      ringsRef.current.forEach((el, i) => {
+        if (!el) return
+        const ring = rings[i]
+        el.style.transform = `translate3d(0, ${n * ring.factorY * 320}px, 0) rotate(${n * ring.rotate * 720}deg)`
+      })
+
+      orbsRef.current.forEach((el, i) => {
+        if (!el) return
+        const orb = orbs[i]
+        el.style.transform = `translate3d(${orb.baseX + n * orb.factorX * 520}px, ${orb.baseY + n * orb.factorY * 420}px, 0) rotate(${n * orb.rotate * 720}deg) scale(${1 + n * 0.14})`
+      })
+
+      particlesRef.current.forEach((el, i) => {
+        if (!el) return
+        const p = particles[i]
+        el.style.transform = `translate3d(${n * p.factorX * 420}px, ${n * p.factorY * -460}px, 0)`
+      })
+
+      if (floatBoxRef.current) {
+        floatBoxRef.current.style.transform = `translate3d(${n * 46}px, ${n * -72}px, 0) rotate(${n * 32}deg)`
+      }
+      if (tiltBoxRef.current) {
+        tiltBoxRef.current.style.transform = `translate3d(${n * -58}px, ${n * 44}px, 0) rotate(${n * -38}deg)`
+      }
+
+      rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
+  }, [scrollYRef])
 
   return (
-    <div className="relative h-[340px] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_30%_30%,rgba(139,92,246,0.22),transparent_30%),radial-gradient(circle_at_72%_62%,rgba(34,211,238,0.14),transparent_26%),linear-gradient(180deg,#05070d_0%,#0a0d16_45%,#09090d_100%)] md:h-[460px]">
+    <div aria-hidden="true" className="relative h-[340px] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_30%_30%,rgba(139,92,246,0.22),transparent_30%),radial-gradient(circle_at_72%_62%,rgba(34,211,238,0.14),transparent_26%),linear-gradient(180deg,#05070d_0%,#0a0d16_45%,#09090d_100%)] md:h-[460px]">
       <div className="absolute inset-0 bg-[linear-gradient(140deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01)_30%,transparent_65%)]" />
 
-      {rings.map((ring) => (
+      {rings.map((ring, i) => (
         <div
           key={ring.id}
+          ref={(el) => { ringsRef.current[i] = el }}
           className="absolute rounded-full border"
           style={{
             width: ring.size,
@@ -92,14 +136,14 @@ export function HeroScene({ scrollY }: HeroSceneProps) {
             top: ring.top,
             left: ring.left,
             borderColor: ring.border,
-            transform: `translate3d(0, ${normalizedScroll * ring.factorY * 320}px, 0) rotate(${normalizedScroll * ring.rotate * 720}deg)`,
           }}
         />
       ))}
 
-      {orbs.map((orb) => (
+      {orbs.map((orb, i) => (
         <div
           key={orb.id}
+          ref={(el) => { orbsRef.current[i] = el }}
           className="absolute rounded-full"
           style={{
             width: orb.size,
@@ -108,14 +152,14 @@ export function HeroScene({ scrollY }: HeroSceneProps) {
             left: orb.left,
             background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), ${orb.color} 38%, rgba(0,0,0,0) 74%)`,
             filter: `blur(${orb.blur}px)`,
-            transform: `translate3d(${orb.baseX + normalizedScroll * orb.factorX * 520}px, ${orb.baseY + normalizedScroll * orb.factorY * 420}px, 0) rotate(${normalizedScroll * orb.rotate * 720}deg) scale(${1 + normalizedScroll * 0.14})`,
           }}
         />
       ))}
 
-      {particles.map((particle) => (
+      {particles.map((particle, i) => (
         <div
           key={particle.id}
+          ref={(el) => { particlesRef.current[i] = el }}
           className="absolute rounded-full"
           style={{
             width: particle.size,
@@ -124,18 +168,17 @@ export function HeroScene({ scrollY }: HeroSceneProps) {
             left: particle.left,
             background: particle.color,
             boxShadow: `0 0 22px ${particle.color}`,
-            transform: `translate3d(${normalizedScroll * particle.factorX * 420}px, ${normalizedScroll * particle.factorY * -460}px, 0)`,
           }}
         />
       ))}
 
       <div
+        ref={floatBoxRef}
         className="absolute left-[14%] top-[18%] h-40 w-40 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm"
-        style={{ transform: `translate3d(${normalizedScroll * 46}px, ${normalizedScroll * -72}px, 0) rotate(${normalizedScroll * 32}deg)` }}
       />
       <div
+        ref={tiltBoxRef}
         className="absolute bottom-[18%] right-[12%] h-28 w-28 rounded-[1.75rem] border border-white/10 bg-white/[0.06] backdrop-blur-sm"
-        style={{ transform: `translate3d(${normalizedScroll * -58}px, ${normalizedScroll * 44}px, 0) rotate(${normalizedScroll * -38}deg)` }}
       />
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#09090d] via-[#09090d]/70 to-transparent" />
