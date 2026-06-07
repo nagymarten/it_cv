@@ -126,3 +126,11 @@ export const navItems = [
 export const sectionLabelClass = 'mb-3 inline-block text-xs font-semibold uppercase tracking-[0.22em] text-violet-300'
 export const cardClass = 'rounded-3xl border border-white/10 bg-white/[0.035] shadow-[0_20px_60px_rgba(0,0,0,0.24)]'
 export const revealBaseClass = 'transition duration-700 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none'
+
+export const SCROLL = {
+  HEADER_HEIGHT: 96,
+  PROGRESS_RANGE: 2200,
+  HERO_GLOW_FADE: 640,
+  HERO_ATMOSPHERE_RANGE: 900,
+  BACK_TO_TOP_THRESHOLD: 800,
+} as const

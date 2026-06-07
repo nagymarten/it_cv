@@ -27,3 +27,10 @@ dist-ssr
 
 # Claude
 .agents
+
+# Tests
+test-results
+playwright-report
+
+# Docs
+docs

@@ -3,7 +3,10 @@ import { lazy, Suspense, useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useScroll } from '@/context/ScrollContext'
-import { profile, contact, sectionLabelClass, cardClass } from '@/data/cv'
+import { profile, contact, sectionLabelClass, cardClass, SCROLL } from '@/data/cv'
+import { Container } from '@/components/layout/Container'
+import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
 
 const HeroScene = lazy(() => import('./HeroScene').then((m) => ({ default: m.HeroScene })))
 
@@ -24,8 +27,8 @@ export default function HeroSection() {
     const handler = ({ scroll }: { scroll: number }) => {
       scrollYRef.current = scroll
       if (glowRef.current) {
-        const heroAtmosphere = Math.min(scroll / 900, 1)
-        glowRef.current.style.opacity = String(Math.max(0.2, 1 - scroll / 640))
+        const heroAtmosphere = Math.min(scroll / SCROLL.HERO_ATMOSPHERE_RANGE, 1)
+        glowRef.current.style.opacity = String(Math.max(0.2, 1 - scroll / SCROLL.HERO_GLOW_FADE))
         glowRef.current.style.filter = `blur(${32 + heroAtmosphere * 28}px)`
         glowRef.current.style.transform = `scale(${1 + heroAtmosphere * 0.18})`
       }
@@ -76,9 +79,9 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section id="hero" ref={sectionRef} data-nav-section className="scroll-mt-24">
-      <div className="mx-auto w-[min(1120px,calc(100%-1rem))] px-0 pb-20 pt-24 md:w-[min(1120px,calc(100%-2rem))] md:pt-28">
-        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+    <section id="hero" ref={sectionRef} data-nav-section className="scroll-mt-28">
+      <Container className="px-0 pb-20 pt-24 md:pt-28">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div
             ref={textRef}
             className="translate-y-0 opacity-100 transition duration-700 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none"
@@ -90,23 +93,13 @@ export default function HeroSection() {
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">{profile.intro}</p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <a
-                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 px-5 py-3 text-sm font-medium text-white shadow-[0_10px_30px_rgba(109,93,252,0.28)] transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400"
-                  href={`mailto:${contact.email}`}
-                >
-                  Get in touch
-                </a>
-                <a
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-medium text-slate-100 transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400"
-                  href="#projects"
-                >
-                  View projects
-                </a>
+                <Button href={`mailto:${contact.email}`}>Get in touch</Button>
+                <Button href="#projects" variant="ghost">View projects</Button>
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
-                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">{profile.location}</span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">{contact.email}</span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">{contact.phone}</span>
+                <Badge>{profile.location}</Badge>
+                <Badge>{contact.email}</Badge>
+                <Badge>{contact.phone}</Badge>
               </div>
             </div>
           </div>
@@ -149,7 +142,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <div ref={statsRef} className="mt-8 grid gap-4 md:grid-cols-3">
+        <div ref={statsRef} className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {profile.stats.map((item) => (
             <div
               key={item.label}
@@ -160,7 +153,7 @@ export default function HeroSection() {
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   )
 }

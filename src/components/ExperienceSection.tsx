@@ -1,12 +1,14 @@
 import { sectionLabelClass, cardClass, revealBaseClass, experiences } from '@/data/cv'
+import { Section } from '@/components/layout/Section'
+import { Container } from '@/components/layout/Container'
 
 export default function ExperienceSection() {
   return (
-    <section className="scroll-mt-28">
-      <div className="mx-auto w-[min(1120px,calc(100%-1rem))] py-16 md:w-[min(1120px,calc(100%-2rem))]">
+    <Section>
+      <Container className="py-16">
         <div className={`mb-6 ${revealBaseClass}`} data-parallax data-depth="0.06">
           <p className={sectionLabelClass}>Experience</p>
-          <h2 className="text-4xl font-semibold text-white">Selected roles</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white">Selected roles</h2>
         </div>
         <div className="grid gap-4">
           {experiences.map((item, index) => (
@@ -36,7 +38,7 @@ export default function ExperienceSection() {
             </article>
           ))}
         </div>
-      </div>
-    </section>
+      </Container>
+    </Section>
   )
 }

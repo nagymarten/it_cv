@@ -4,6 +4,7 @@ import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrollContext } from '@/context/ScrollContext'
+import { SCROLL } from '@/data/cv'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -14,7 +15,7 @@ export default function ScrollProvider({ children }: { children: ReactNode }) {
     const instance = new Lenis({
       autoRaf: false,
       smoothWheel: true,
-      anchors: { offset: 96 },
+      anchors: { offset: SCROLL.HEADER_HEIGHT },
       duration: 1.05,
       wheelMultiplier: 0.95,
       touchMultiplier: 1,

@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { projects, sectionLabelClass, cardClass } from '@/data/cv'
+import { Container } from '@/components/layout/Container'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -88,10 +89,10 @@ export default function ProjectsSection() {
 
   return (
     <section id="projects" ref={sectionRef} data-nav-section className="scroll-mt-28">
-      <div className="mx-auto w-[min(1120px,calc(100%-1rem))] py-16 md:w-[min(1120px,calc(100%-2rem))]">
+      <Container className="py-16">
         <div className="mb-6" data-projects-heading>
           <p className={sectionLabelClass}>Projects</p>
-          <h2 className="text-4xl font-semibold text-white">Work beyond the day job</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white">Work beyond the day job</h2>
           <p className="mt-4 max-w-2xl text-slate-300">
             A short cinematic pause helps the projects land with more presence, depth, and focus.
           </p>
@@ -114,7 +115,7 @@ export default function ProjectsSection() {
             </article>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   )
 }
