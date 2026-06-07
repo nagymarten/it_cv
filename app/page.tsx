@@ -6,7 +6,7 @@ import ClosingSection from '@/components/sections/ClosingSection'
 
 export default function Page() {
   return (
-    <main id="top" style={{ paddingTop: '64px' }}>
+    <main id="top">
       <HeroSection />
       <IntroSection />
       <GridSection />
