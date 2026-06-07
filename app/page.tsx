@@ -1,6 +1,7 @@
 import HeroSection from '@/components/sections/HeroSection'
 import IntroSection from '@/components/sections/IntroSection'
 import GridSection from '@/components/sections/GridSection'
+import QuoteSection from '@/components/sections/QuoteSection'
 
 export default function Page() {
   return (
@@ -8,6 +9,7 @@ export default function Page() {
       <HeroSection />
       <IntroSection />
       <GridSection />
+      <QuoteSection />
     </main>
   )
 }
