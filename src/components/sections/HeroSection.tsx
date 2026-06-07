@@ -13,7 +13,11 @@ export default function HeroSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (!sectionRef.current) return
     const ctx = gsap.context(() => {
+      // Prevent flash-of-visible-content by setting initial state synchronously
+      gsap.set('.hero-word', { opacity: 0, y: 60 })
+
       // Word stagger entrance
       gsap.from('.hero-word', {
         y: 60,
